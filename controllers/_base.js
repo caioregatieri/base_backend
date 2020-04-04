@@ -38,7 +38,7 @@ exports.show = async function(Model, indentify) {
     try {
         const model = new Model(indentify);
         const result = await model.fetch();
-        return result.toJSON();
+        return result ? result.toJSON() : [];
     } catch (error) {
         throw(handleError(error));
     }
@@ -194,3 +194,12 @@ function handleError(err) {
     };
 }
 exports.handleError = handleError;
+
+//criar objeto para create/update
+exports.makeObjToSave = async function(Schema, data){
+    let obj = {};
+    Schema.forEach((column) => {
+        if (data[column]) obj[column] = data[column];
+    })
+    return obj;
+}

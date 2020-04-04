@@ -12,9 +12,10 @@ module.exports = {
     insecureAuth : true
   },
   migrations: {
-    tableName: 'migrations'
+    tableName: 'migrations',    
+    directory: './database/migrations'
   },
   seeds: {
-    directory: './seeds'
+    directory: './database/seeds'
   }
 };

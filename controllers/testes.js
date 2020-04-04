@@ -5,21 +5,13 @@ exports.sendAsEMail = async function(req, res) {
         const emailService = require('../services/email');
         const message = {
             from: process.env['SMTP_USER'],
-            to: process.env['ERROR_MAIL'],
+            to: req.body.to,
             subject: req.body.subject,
+            template: req.body.template,
             text: req.body.text,
-            html: req.body.html,
         };
-        const smtpConfig = {
-            service: process.env['SMTP_SERVICE'],
-            host: process.env['SMTP_HOST'],
-            port: process.env['SMTP_PORT'],
-            secure: process.env['SMTP_SECURE'],
-            user: process.env['SMTP_USER'],
-            pass: process.env['SMTP_PASS'],
-        };
-        const result = await emailService.sendMail(message, smtpConfig);
-        res.send(result);
+        const result = await emailService.send(message);
+        res.send({accepted: result.accepted, rejected: result.rejected});
     } catch (err) {
         console.log(err);
         res.status(500).send(err);

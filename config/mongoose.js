@@ -2,12 +2,12 @@
 
 const mongoose = require('mongoose');
 
-const url  = process.env.MONGODB_URL;
-const user = process.env.MONGODB_USER;
-const pass = process.env.MONGODB_PASSWORD;
-const host = process.env.MONGODB_HOST;
-const port = process.env.MONGODB_PORT || 27017;
-const name = process.env.MONGODB_NAME;
+const url  = process.env.MONGO_URL;
+const user = process.env.MONGO_USER;
+const pass = process.env.MONGO_PASSWORD;
+const host = process.env.MONGO_HOST || '127.0.0.1';
+const port = process.env.MONGO_PORT || 27017;
+const name = process.env.MONGO_NAME;
 
 let dns;
 if (url) {

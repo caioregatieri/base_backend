@@ -34,7 +34,7 @@ function defaultHandler(errorMessage){
 
 function sendAsMail(errorMessage){
     try {
-        const mailService = require('./services/email');
+        const mailService = require('./email');
         const content = mailService.loadTemplate('default', {
             title: process.env['APP'],
             erro: errorMessage
@@ -61,7 +61,7 @@ function sendAsMail(errorMessage){
 
 async function sendToApi(errorMessage){
     try {
-        const requestService = require('./services/requester');
+        const requestService = require('./requester');
         const url = process.env['ERROR_API'] + '&error_message=' + errorMessage;
         const result = await requestService.get(url);
     } catch (error) {
