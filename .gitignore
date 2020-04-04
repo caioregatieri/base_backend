@@ -1,0 +1,21 @@
+# API keys
+.env
+
+# Dependency directory
+node_modules
+*lock.json
+
+# Editors
+.idea
+.vscode
+*.iml
+
+# OS metadata
+.DS_Store
+Thumbs.db
+.history/*
+
+uploads/*
+public/*
+log/compress-images/*
+log/errors/*
