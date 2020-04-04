@@ -34,6 +34,16 @@ exports.index = async function({Model, Schema, Relations, Primarykey}, req) {
     }  
 };
 
+exports.show = async function(Model, indentify) {
+    try {
+        const model = new Model(indentify);
+        const result = await model.fetch();
+        return result.toJSON();
+    } catch (error) {
+        throw(handleError(error));
+    }
+}
+
 exports.create = async function(Model, data) {
     try {
         const model = new Model(data);

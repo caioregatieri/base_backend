@@ -17,6 +17,20 @@ exports.index = async function(req, res) {
     }
 };
 
+exports.show = async function(req, res) {
+    try {
+        const indentify = Primarykey ? {[Primarykey]: req.params[Primarykey]} : {id: req.params.id};
+        const result = await Base.show(Model, indentify)
+        if (process.env.REDIS_CACHE && Boolean(process.env.REDIS_CACHE == 'true')) {
+            req.redis.set(req.originalUrl, JSON.stringify(result));
+        }
+        res.send(result);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error);
+    }
+};
+
 exports.create = async function(req, res) {
     try {
         const result = await Base.create(Model, await makeObjToSave(req))
