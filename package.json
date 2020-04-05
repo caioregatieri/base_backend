@@ -29,7 +29,7 @@
     "imagemin-pngquant": "^8.0.0",
     "jsonwebtoken": "^5.7.0",
     "juice": "^6.0.0",
-    "knex": "^0.16.5",
+    "knex": ">=0.19.5",
     "method-override": "^2.3.10",
     "moment": "^2.24.0",
     "mongo": "^0.1.0",
