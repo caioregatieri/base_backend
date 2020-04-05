@@ -7,7 +7,7 @@ const user = process.env.MONGO_USER;
 const pass = process.env.MONGO_PASSWORD;
 const host = process.env.MONGO_HOST || '127.0.0.1';
 const port = process.env.MONGO_PORT || 27017;
-const name = process.env.MONGO_NAME;
+const name = process.env.MONGO_DB_NAME;
 
 let dns;
 if (url) {

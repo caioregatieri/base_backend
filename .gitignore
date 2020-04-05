@@ -15,6 +15,7 @@ node_modules
 Thumbs.db
 .history/*
 
+data/*
 uploads/*
 public/*
 log/compress-images/*
