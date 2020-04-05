@@ -6,16 +6,15 @@ const path = require('path');
 const shell = require('shelljs');
 
 module.exports = function(pathtoSave){
-    var crypto = require("crypto");
-    var random = crypto.randomBytes(20).toString('hex');
+    const crypto = require("crypto");
     const storage = multer.diskStorage({
         destination: function(req, file, cb){
-            const _pathtoSave = path.join(pathtoSave, random);
+            const _pathtoSave = path.join(pathtoSave, crypto.randomBytes(20).toString('hex'));
             if (!fs.existsSync(_pathtoSave)) shell.mkdir('-p', _pathtoSave);
             cb(null, _pathtoSave);
         },
         filename: function(req, file, cb){
-            const fileName = `${random}${Date.now()}${path.extname(file.originalname)}`;
+            const fileName = `${Date.now()}${path.extname(file.originalname)}`;
             cb(null, fileName);
         }
     });

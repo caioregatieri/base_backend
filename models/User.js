@@ -1,6 +1,6 @@
 'use strict'
 
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt');
 const bookshelf = require('../config/bookshelf').bookshelf;
 
 const Model = bookshelf.Model.extend({
