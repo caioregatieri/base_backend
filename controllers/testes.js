@@ -152,3 +152,28 @@ exports.queryRaw = async function(req, res) {
         });
     }
 }
+
+exports.mongoCreate = async function(req, res) {
+    try {
+        const User = require('../database/schemas/User');
+        const { name, phone, email, password } = req.body;
+        const userExists = await User.findOne({ email });
+
+        if (userExists) {
+            return res.json(userExists);
+        }
+    
+        const user = await User.create({
+            name,
+            phone,
+            email,
+            password
+        });
+        
+        return res.send(user);
+    } catch (error) {
+        res.status(500).send({
+            error
+        });
+    }
+}

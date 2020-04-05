@@ -16,5 +16,6 @@ router.get('/address-by-geo',     controller.addressByGeo);
 router.post('/push-notification', controller.pushNotification);
 
 router.get('/query-raw',          controller.queryRaw);
+router.post('/mongo-create',      controller.mongoCreate);
 
 module.exports = router;
