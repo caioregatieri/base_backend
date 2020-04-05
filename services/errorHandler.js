@@ -77,7 +77,7 @@ function saveOnFile(errorMessage){
         const date = new Date();
         const dateStr = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
         const timeStr = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-        const folder = path.resolve(__dirname, 'log', 'errors');
+        const folder = path.resolve(__dirname, '..', 'log', 'errors');
         // console.log(folder);
         if (!fs.existsSync(folder)){
             shell.mkdir('-p', folder);
