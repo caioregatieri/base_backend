@@ -1,3 +1,5 @@
+'use strict'
+
 const { promisify } = require('util');
 
 const redisClient = require('../config/redis');

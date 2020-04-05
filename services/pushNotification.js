@@ -2,7 +2,7 @@
 
 const OneSignal = require('onesignal-node');
 
-function sendNotification(message, data, to_ids, small_icon = null, large_icon = null){
+function send(message, data, to_ids, small_icon = null, large_icon = null){
     // console.log(configs, message, to_ids);
     return new Promise((resolve, reject) => {
         if (!message || !message.length) {
@@ -72,7 +72,7 @@ function sendNotification(message, data, to_ids, small_icon = null, large_icon =
 }
 
 module.exports = {
-    sendNotification
+    send
 };
 
 

@@ -4,7 +4,7 @@ exports.sendAsEMail = async function(req, res) {
     try {
         const emailService = require('../services/email');
         const message = {
-            from: process.env['SMTP_USER'],
+            from: process.env.MAIL_USER,
             to: req.body.to,
             subject: req.body.subject,
             template: req.body.template,
@@ -44,34 +44,41 @@ exports.saveOnFile = async function(req, res) {
 };
 
 exports.uploadImagesZip = async function(req, res) {
+    const path = require('path');
     const imageCompress = require('../services/imageCompress');
+    const moveFile = require('../utils/moveFile');
 
     const removeTempFile = function(file){
         const fs = require('fs');
-        fs.unlink(file, function(){
-            console.log("> ARQUIVO TEMPORÁRIO \'%s\' EXCLUIDO.", file);
-        });
+        fs.unlinkSync(file);
     };
 
     const unzipFile = async function(filePath){
         const { promisify } = require('util');
-        const path = require('path');
         const extract = require('extract-zip');
         const extractPromisified = promisify(extract);
-    
         const fileFolder = path.dirname(filePath);
-        const destPath = path.resolve(fileFolder, Date.now().toString());
+        // const destPath = path.resolve(fileFolder, Date.now().toString());
     
-        await extractPromisified(filePath, {dir: destPath});
-        return destPath
+        await extractPromisified(filePath, {dir: fileFolder});
+
+        removeTempFile(filePath);
+
+        return fileFolder
     };
 
     const folder = await unzipFile(req.file.path);
-
-    await removeTempFile(req.file.path);
     
-    const files = await imageCompress.start(folder);
+    let files = await imageCompress.start(folder);
 
+    await (async () => {
+        const a = files.map(async (file) => {
+            const f = await moveFile.moveToFolder(file,  path.resolve(__dirname, '..', 'public'))
+            return `${process.env.HOST}/public/${path.basename(f)}`
+        });
+        files = await Promise.all(a);
+    })();
+    
     res.send(files);
 }
 
@@ -79,9 +86,12 @@ exports.uploadImage = async function(req, res) {
     try {
         const path = require('path');
         const imageCompress = require('../services/imageCompress');
+        const moveFile = require('../utils/moveFile');
         const folder = path.dirname(req.file.path);
-        const files = await imageCompress.start(folder);
-        res.send(files);
+        const file = await imageCompress.start(folder);
+        let filePath = await moveFile.moveToFolder(file[0],  path.resolve(__dirname, '..', 'public'));
+        filePath = `${process.env.HOST}/public/${path.basename(filePath)}`;
+        res.send(filePath);
     } catch (error) {
         res.status(500).send({
             error

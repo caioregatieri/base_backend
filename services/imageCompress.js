@@ -10,11 +10,11 @@ async function start(images_path){
     if (!fs.existsSync(destFolder)) {
         fs.mkdirSync(destFolder);
     };
-    const origFiles = await readDir(images_path);
     // const validFiles = origFiles.filter(el => el.includes('.jpg') || el.includes('.png'))
     await compress2(images_path, destFolder);
     await moveImagesToParentFolder(destFolder);
     await removeTempFolder(destFolder);
+    const origFiles = await readDir(images_path);
     return origFiles;
 }
 
@@ -96,7 +96,6 @@ async function removeTempFolder(folder){
     const rimraf = require('rimraf');
     const rimrafPromisified = promisify(rimraf);
     await rimrafPromisified(folder);
-    console.log('> PASTA TEMPORÁRIA \'%s\' EXCLUÍDA.', folder);
     return true;
 }
 

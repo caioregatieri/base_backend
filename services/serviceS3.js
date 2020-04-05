@@ -16,7 +16,7 @@ const s3 = new aws.S3({
 });
 
 exports.listObjctsFromS3 = function(folder){
-  var params = { 
+  const params = { 
     Bucket: process.env.AWS_BUCKET,
     Delimiter: '/',
   };
@@ -46,8 +46,7 @@ exports.listObjctsFromS3 = function(folder){
 
 exports.uploadToS3 = function(file, folder) {
   return new Promise((resolve, reject) => {
-
-    var params = {
+    const params = {
       Bucket: process.env.AWS_BUCKET,
       Body : fs.createReadStream(file),
       Key : folder ? folder + "/" + path.basename(file) : path.basename(file),
@@ -68,15 +67,15 @@ exports.uploadToS3 = function(file, folder) {
 };
 
 exports.downloadFromS3 = function(objectKey, destPath){
-  var request = require('request');
+  const request = require('request');
 
   if (!fs.existsSync(destPath)){
     fs.mkdirSync(destPath);
   }
 
-  var objectBaseName = objectKey.split("/")[1]; 
+  const objectBaseName = objectKey.split("/")[1]; 
   destPath = path.join(destPath, objectBaseName);
-  var objectUrl = "https://" + process.env.AWS_BUCKET + "." + process.env.AWS_ENDPOINT + "/" + objectKey;
+  const objectUrl = "https://" + process.env.AWS_BUCKET + "." + process.env.AWS_ENDPOINT + "/" + objectKey;
 
   return new Promise((resolve, reject) => {
     try{
@@ -103,7 +102,7 @@ exports.downloadFromS3 = function(objectKey, destPath){
 };
 
 exports.deleteFromS3 = function(keys){
-  var params = {
+  const params = {
     Bucket: process.env.AWS_BUCKET, 
     Delete: { // required
       Objects: keys,

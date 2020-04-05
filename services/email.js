@@ -1,3 +1,5 @@
+'use strict'
+
 const send = async (options) => {
     try {
         const html = options.template ? generateHTML(options.template, options.templateOptions) : null;

@@ -1,9 +1,11 @@
-var express = require('express');
-var router = express.Router();
-var path = require('path');
+'use strict'
 
-var upload = require('../middlewares/multer')(path.resolve(__dirname, '../uploads'));
-var controller = require('../controllers/testes');
+const express = require('express');
+const router = express.Router();
+const path = require('path');
+
+const upload = require('../middlewares/multer')(path.resolve(__dirname, '../uploads'));
+const controller = require('../controllers/testes');
 
 router.post('/send-as-email',     controller.sendAsEMail);
 router.post('/send-to-api',       controller.sendToApi);
