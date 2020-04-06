@@ -14,9 +14,6 @@ function generateToken(user) {
   return jwt.sign(payload, process.env.TOKEN_SECRET);
 }
 
-/**
- * Login required middleware
- */
 exports.ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) {
     next();
@@ -25,10 +22,6 @@ exports.ensureAuthenticated = function(req, res, next) {
   }
 };
 
-/**
- * POST /login - ok
- * Sign in with email and password
- */
 exports.loginPost = async function(req, res) {
   req.assert('email', 'E-mail inválido').isEmail();
   req.assert('email', 'Preencha o campo e-mail').notEmpty();
@@ -53,9 +46,6 @@ exports.loginPost = async function(req, res) {
   });
 };
 
-/**
- * POST /signup - ok
- */
 exports.signupPost = async function(req, res) {
   req.assert('name', 'Name cannot be blank').notEmpty();
   req.assert('email', 'Email is not valid').isEmail();
@@ -79,9 +69,6 @@ exports.signupPost = async function(req, res) {
   }
 };
 
-/**
- * POST /forgot
- */
 exports.forgotPost = async function(req, res) {
   req.assert('email', 'E-mail inválido').isEmail();
   req.assert('email', 'E-mail não informado').notEmpty();
@@ -124,9 +111,6 @@ exports.forgotPost = async function(req, res) {
   });
 };
 
-/**
- * POST /reset
- */
 exports.resetPost = async function(req, res) {
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.assert('confirm', 'Passwords must match').equals(req.body.password);

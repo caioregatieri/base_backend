@@ -8,8 +8,6 @@ const router = express.Router();
 module.exports = function(exceptions){
     const { Model } = require('./../models/User');
 
-    // console.log(exceptions);
-
     router.use(async function(req, res, next) {
         let exit = false;
 

@@ -5,7 +5,6 @@ const logger = require('morgan');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
-const dotenv = require('dotenv');
 const cors = require('cors');
 const methodOverride = require('method-override');
 const fingerprint = require('express-fingerprint');
@@ -14,56 +13,86 @@ const responseTime = require('response-time');
 const fs = require('fs');
 const shell = require('shelljs');
 
+require('dotenv/config');
+
 const errorHandler = require('./services/errorHandler');
-errorHandler.load();
 
-dotenv.load();
+class App {
+  
+  constructor()  {
+    errorHandler.load();
 
-const app = express();
+    this.app = express();
 
-app.use(compression());
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(expressValidator());
+    this.loadPlugins     = this.loadPlugins.bind(this);
+    this.setPublicPath   = this.setPublicPath.bind(this);
+    this.setMiddlewares  = this.setMiddlewares.bind(this);
+    this.setRoutes       = this.setRoutes.bind(this);
+    this.setSocketServer = this.setSocketServer.bind(this);
 
-const public_path = path.join(__dirname, 'public');
-if (!fs.existsSync(public_path)) shell.mkdir('-p', public_path);
+    this.loadPlugins();
+    this.setPublicPath();
+    this.setMiddlewares();
+    this.setRoutes();
 
-app.use('/public', express.static(public_path));
-app.use(cors());
-app.use(methodOverride('_method'));
-app.use(fingerprint({
-  parameters:[
-      fingerprint.useragent,
-      fingerprint.acceptHeaders,
-      fingerprint.geoip,
-  ]
-}));
-app.use(helmet());
-app.use(responseTime());
+    this.server = this.setSocketServer()
+  }
+  
+  loadPlugins() {
+    this.app.use(compression());
+    this.app.use(logger('dev'));
+    this.app.use(bodyParser.json());
+    this.app.use(bodyParser.urlencoded({ extended: false }));
+    this.app.use(expressValidator());
+    this.app.use(cors());
+    this.app.use(methodOverride('_method'));
+    this.app.use(fingerprint({
+      parameters:[
+          fingerprint.useragent,
+          fingerprint.acceptHeaders,
+          fingerprint.geoip,
+      ]
+    }));
+    this.app.use(helmet());
+    this.app.use(responseTime());
+  }
 
-//middleware para autenticar
-var authMiddleware = require('./middlewares/auth')(require('./config/authSkip'));
-app.use(authMiddleware);
+  setPublicPath() {
+    const public_path = path.join(__dirname, 'public');
+    if (!fs.existsSync(public_path)) shell.mkdir('-p', public_path);
+    this.app.use('/public', express.static(public_path));
+  }
 
-//middleware para lidar com # em query e body
-var hashtagMiddleware = require('./middlewares/hashtag');
-app.use(hashtagMiddleware);
+  setMiddlewares() {
+    //middleware para autenticar
+    const authMiddleware = require('./middlewares/auth')(require('./config/authSkip'));
+    this.app.use(authMiddleware);
 
-app.use('/api', require('./routes'));
-app.use('*', (req, res) => res.send({msg: 'route_not_found'}));
+    //middleware para lidar com # em query e body
+    const hashtagMiddleware = require('./middlewares/hashtag');
+    this.app.use(hashtagMiddleware);
+  }
 
-// servidor socket.io
-const server = http.Server(app);
-const io = require('socket.io')(server);
+  setRoutes() {
+    this.app.use('/api', require('./routes'));
+    this.app.use('*', (req, res) => res.send({msg: 'route_not_found'}));
+  }
 
-app.use((req, res, next) => {
-    req.io = io;
-    next();
-});
+  setSocketServer() {
+    const server = http.Server(this.app);
+    const io = require('socket.io')(server);
 
-require('./socket')(io);
+    this.app.use((req, res, next) => {
+        req.io = io;
+        next();
+    });
 
-module.exports = server;
+    require('./socket')(io);
+
+    return server;
+  }
+
+}
+
+module.exports = new App().server;
 
