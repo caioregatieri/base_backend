@@ -23,10 +23,9 @@ class BaseRepository {
         this.makeObjetToSave = this.makeObjetToSave.bind(this);
     }
 
-
     async index(query) {
-        const options = this.getOptions(this.Schema, this.Relations, this.Primarykey, query); 
         try {
+            const options = this.getOptions(query); 
             const model = new this.Model();
             options.where.forEach(function(w){
                 model.where(knex.raw(w));
@@ -57,10 +56,11 @@ class BaseRepository {
         }  
     }
 
-    async show(indentify) {
+    async show(indentify, query = null) {
         try {
+            const options = this.getOptions(query); 
             const model = new this.Model(indentify);
-            const result = await model.fetch();
+            const result = await model.fetch(options.fetchOptions);
             return result ? result.toJSON() : [];
         } catch (error) {
             throw(this.handleError(error));

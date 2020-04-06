@@ -14,7 +14,7 @@ class BaseController {
 
     async index(req, res) {
         try {
-            const result = await this.repository.index({ ...this.model }, req);
+            const result = await this.repository.index(req.query);
             res.send(result);
         } catch (error) {
             res.status(500).send(error);
@@ -24,7 +24,7 @@ class BaseController {
     async show(req, res) {
         try {
             const indentify = {id: req.params.id};
-            const result = await this.repository.show(indentify);
+            const result = await this.repository.show(indentify, req.query);
             res.send(result);
         } catch (error) {
             res.status(500).send(error);
