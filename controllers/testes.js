@@ -143,7 +143,8 @@ exports.pushNotification = async function(req, res) {
 
 exports.queryRaw = async function(req, res) {
     try {
-        const Base = require('./_base');
+        const repository = require('../repositories/_base');
+        const Base = new repository();
         const result = await Base.queryRaw('select * from users limit 1');   
         res.send(result);
     } catch (error) {
