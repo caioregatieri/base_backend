@@ -1,28 +1,63 @@
+'use strict'
 const baseRepository = require('../repositories/_base');
 class BaseController {
     
     constructor(model) {
-        this.model = model;
+        this.repository = new baseRepository(model);
+
+        this.index  = this.index.bind(this);
+        this.show   = this.show.bind(this);
+        this.create = this.create.bind(this);
+        this.update = this.update.bind(this);
+        this.delete = this.delete.bind(this);
     }
 
     async index(req, res) {
-        res.send('index ' + this.model);
+        try {
+            const result = await this.repository.index({ ...this.model }, req);
+            res.send(result);
+        } catch (error) {
+            res.status(500).send(error);
+        }
     }
 
     async show(req, res) {
-        res.send('show ');
+        try {
+            const indentify = {id: req.params.id};
+            const result = await this.repository.show(indentify);
+            res.send(result);
+        } catch (error) {
+            res.status(500).send(error);
+        }
     }
 
     async create(req, res) {
-        res.send('create ');
+        try {
+            const result = await this.repository.create(req.body);
+            res.send(result);
+        } catch (error) {
+            res.status(500).send(error);
+        }
     }
 
     async update(req, res) {
-        res.send('update ');
-    }
+        try {
+            const indentify = {id: req.params.id};
+            const result = await this.repository.update(indentify, req.body);
+            res.send(result);
+        } catch (error) {
+            res.status(500).send(error);
+        }
+    };
 
     async delete(req, res) {
-        res.send('delete ');
+        try {
+            const indentify = {id: req.params.id};
+            const result = await this.repository.delete(indentify)
+            res.status(204).send(result);
+        } catch (error) {
+            res.status(500).send(error);
+        }
     }
 }
 

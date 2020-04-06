@@ -3,7 +3,7 @@ const BaseController = require('./_base');
 const Model = require('../models/User');
 // const { Cache } = require('../services/redisCache');
 
-class User extends BaseController {
+class Controller extends BaseController {
 
     constructor() {
         super(Model);
@@ -11,4 +11,4 @@ class User extends BaseController {
 
 }
 
-module.exports = new User();
+module.exports = new Controller();

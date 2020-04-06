@@ -1,0 +1,2 @@
+1:52:10: Uncaught exception at: undefined, error: SyntaxError: Unexpected token =
+2:22:18: Uncaught exception at: undefined, error: SyntaxError: await is only valid in async function
