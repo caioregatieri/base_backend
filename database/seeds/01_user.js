@@ -1,27 +1,17 @@
-const uuid = require('uuid');
+const { encrypt } = require('../../utils/encryptText');
+const { make: uuid } = require('../../utils/uuid');
 
-function encryptPassword(password) {
-  const bcrypt = require('bcrypt');
-  const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(password, salt);
-  return hash;
-}
-
-exports.seed =  function(knex, Promise) {
-    return knex('users')
-      .del()
-      .then(() => {
-        return knex('users')
-          .insert([
-            {
-              id:           uuid.v4(),
-              name:         'Admin',
-              email:        'admin@admin.com',
-              phone:        '(00) 0000-0000',
-              password:     encryptPassword('admin'),
-              created_at:   new Date(),
-              updated_at:   new Date()
-            },
-          ]);
-      });
+exports.seed = async function(knex) {
+    await knex('users').del();
+    await knex('users').insert([
+      {
+        id:           uuid(),
+        name:         'Admin',
+        email:        'admin@admin.com',
+        phone:        '(00) 0000-0000',
+        password:     encrypt('admin'),
+        created_at:   new Date(),
+        updated_at:   new Date()
+      },
+    ]);
 };

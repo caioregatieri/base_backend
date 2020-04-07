@@ -1,7 +1,8 @@
 'use strict'
-const bcrypt = require('bcrypt');
-
 const bookshelf = require('../config/bookshelf').bookshelf;
+
+const { encrypt } = require('../utils/encryptText');
+const { make: uuid } = require('../utils/uuid');
 
 const Model = bookshelf.Model.extend({
   tableName: 'users',
@@ -12,22 +13,16 @@ const Model = bookshelf.Model.extend({
   },
 
   onSaving: async function(model, attrs, options) {
-    const encryptPassword = (password) => {
-      const salt = bcrypt.genSaltSync(10);
-      return bcrypt.hashSync(password, salt);
-    }
-
     const password = options.patch ? attrs.password : model.get('password');
     if (!password) { return; }
 
     try {
-      const hash = encryptPassword(password);
+      const hash = encrypt(password);
 
       if (options.patch) {
         attrs.password = hash;
       } else {
-        const uuid = require('uuid');
-        model.set('id', uuid.v4());
+        model.set('id', uuid());
       }
 
       model.set('password', hash);
