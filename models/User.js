@@ -32,6 +32,7 @@ const Model = bookshelf.Model.extend({
   },
 
   comparePassword: function(password, done) {
+    const bcrypt = require('bcrypt');
     const model = this;
     bcrypt.compare(password, model.get('password'), function(err, isMatch) {
       done(err, isMatch);
