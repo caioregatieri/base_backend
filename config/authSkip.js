@@ -1,8 +1,8 @@
 'use strict'
 
 module.exports = [
-    { method: 'POST', route: '/api/account/signup'},
-    { method: 'POST', route: '/api/account/login'},
-    { method: 'POST', route: '/api/account/forgot'},
-    { method: 'POST', route: '/api/account/reset'},
+    { method: 'POST', route: '/api/auth/signup'},
+    { method: 'POST', route: '/api/auth/login'},
+    { method: 'POST', route: '/api/auth/forgot'},
+    { method: 'POST', route: '/api/auth/reset'},
 ];

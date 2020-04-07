@@ -1,4 +1,6 @@
 'use strict'
+const bcrypt = require('bcrypt');
+
 const bookshelf = require('../config/bookshelf').bookshelf;
 
 const Model = bookshelf.Model.extend({
@@ -6,30 +8,29 @@ const Model = bookshelf.Model.extend({
   hasTimestamps: true,
 
   initialize: function() {
-    this.on('saving', this.hashPassword, this);
+    this.on('saving', this.onSaving, this);
   },
 
-  hashPassword: async function(model, attrs, options) {
-    const bcrypt = require('bcrypt');
-    const { promisify } = require('util');
+  onSaving: async function(model, attrs, options) {
+    const encryptPassword = (password) => {
+      const salt = bcrypt.genSaltSync(10);
+      return bcrypt.hashSync(password, salt);
+    }
 
     const password = options.patch ? attrs.password : model.get('password');
     if (!password) { return; }
 
     try {
-      const genSalt = promisify(bcrypt.genSalt);
-      const genHash = promisify(bcrypt.hash);
-  
-      const salt = await genSalt(10);
-      const hash = await genHash(password, salt);
+      const hash = encryptPassword(password);
 
       if (options.patch) {
         attrs.password = hash;
+      } else {
+        const uuid = require('uuid');
+        model.set('id', uuid.v4());
       }
 
       model.set('password', hash);
-
-      return;
     } catch(error) {
       throw(error);
     }

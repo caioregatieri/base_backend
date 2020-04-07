@@ -7,7 +7,7 @@ const bookshelf = require('bookshelf')(knex);
 bookshelf.plugin('virtuals');
 bookshelf.plugin('visibility');
 bookshelf.plugin('pagination');
-bookshelf.plugin(require('bookshelf-eloquent')); // https://www.npmjs.com/package/bookshelf-eloquent
+bookshelf.plugin(require('bookshelf-eloquent'));
 
 knex.migrate.latest();
 

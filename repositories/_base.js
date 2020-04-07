@@ -205,7 +205,6 @@ class BaseRepository {
     }
 
     handleError(err) {
-        console.log(err);
         return {
             code: err.code,
             errno: err.errno,
