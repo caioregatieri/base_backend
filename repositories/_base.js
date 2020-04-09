@@ -39,12 +39,12 @@ class BaseRepository {
                 return part1.toJSON();
             }
     
-            let part2 = await model.fetchAll();
+            let part2 = await model.fetchAll({columns: knex.raw('count(*) as count')});
             part2 = part2.toJSON();
             const pagination = {
                 page: +options.fetchOptions.page,
                 pageSize: +options.fetchOptions.pageSize,
-                rowCount: part2.length,
+                rowCount: part2[0].count || 0,
                 pageCount: Math.floor((part2.length || 1) / options.fetchOptions.pageSize) + (part2.length % options.fetchOptions.pageSize > 0 ? 1 : 0)
             };
             return {
@@ -61,7 +61,7 @@ class BaseRepository {
             const options = this.getOptions(query); 
             const model = new this.Model(indentify);
             const result = await model.fetch(options.fetchOptions);
-            return result ? result.toJSON() : [];
+            return result ? result.toJSON() : null;
         } catch (error) {
             throw(this.handleError(error));
         }

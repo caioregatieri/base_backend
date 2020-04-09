@@ -25,9 +25,15 @@ class BaseController {
         try {
             const indentify = {id: req.params.id};
             const result = await this.repository.show(indentify, req.query);
+            if (!result) {
+                return res.status(404).send({
+                    code: 404,
+                    message: 'not found'
+                });
+            }
             res.send(result);
         } catch (error) {
-            res.status(500).send(error);
+            res.status(501).send(error);
         }
     }
 
@@ -36,27 +42,41 @@ class BaseController {
             const result = await this.repository.create(req.body);
             res.send(result);
         } catch (error) {
-            res.status(500).send(error);
+            res.status(501).send(error);
         }
     }
 
     async update(req, res) {
         try {
             const indentify = {id: req.params.id};
-            const result = await this.repository.update(indentify, req.body);
+            let result = await this.repository.show(indentify);
+            if (!result) {
+                return res.status(404).send({
+                    code: 404,
+                    message: 'not found'
+                });
+            }
+            result = await this.repository.update(indentify, req.body);
             res.send(result);
         } catch (error) {
-            res.status(500).send(error);
+            res.status(501).send(error);
         }
     };
 
     async delete(req, res) {
         try {
             const indentify = {id: req.params.id};
-            const result = await this.repository.delete(indentify)
+            let result = await this.repository.show(indentify);
+            if (!result) {
+                return res.status(404).send({
+                    code: 404,
+                    message: 'not found'
+                });
+            }
+            result = await this.repository.delete(indentify)
             res.status(204).send(result);
         } catch (error) {
-            res.status(500).send(error);
+            res.status(501).send(error);
         }
     }
 }
