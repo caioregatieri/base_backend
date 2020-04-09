@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     image: base_backend
     environment: 
-      NODE_ENV: development
+      NODE_ENV: production
     env_file: 
       - .env
     ports:
@@ -15,8 +15,6 @@ services:
       - mysql
       - mongo
       - redis
-    volumes:
-      - ./public:/home/node/app/public
   mysql:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password

@@ -10,7 +10,6 @@ async function start(images_path){
     if (!fs.existsSync(destFolder)) {
         fs.mkdirSync(destFolder);
     };
-    // const validFiles = origFiles.filter(el => el.includes('.jpg') || el.includes('.png'))
     await compress2(images_path, destFolder);
     await moveImagesToParentFolder(destFolder);
     await removeTempFolder(destFolder);
@@ -18,6 +17,7 @@ async function start(images_path){
     return origFiles;
 }
 
+// not used now
 function compress1(images_path, compressed_images_path){
     const compress_images = require('compress-image');
 
